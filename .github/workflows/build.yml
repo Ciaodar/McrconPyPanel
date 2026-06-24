@@ -63,22 +63,41 @@ jobs:
         if-no-files-found: ignore
 
   release:
-    name: Otomatik Release Oluştur
+    name: Create Release
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Tüm İşletim Sistemi Çıktılarını İndir
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        
+      - name: Download all OS Artifacts
         uses: actions/download-artifact@v4
         with:
           path: release_files
           merge-multiple: true
 
-      - name: GitHub Release (Sürüm) Güncelle
+      - name: Parse Version Information
+        id: version_info
+        run: |
+          TAG=$(jq -r '.tag' version.json)
+          TITLE=$(jq -r '.title' version.json)
+          BODY=$(jq -r '.description' version.json)
+          
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+          
+          # Multiline output for GitHub Actions
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "body<<$EOF" >> $GITHUB_OUTPUT
+          echo "$BODY" >> $GITHUB_OUTPUT
+          echo "$EOF" >> $GITHUB_OUTPUT
+
+      - name: Update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "latest"
-          name: "En Güncel Sürüm (Otomatik)"
-          body: "Bu sürüm kodunuzda yaptığınız son değişiklikler sonucunda otomatik olarak derlenmiştir."
+          tag_name: ${{ steps.version_info.outputs.tag }}
+          name: ${{ steps.version_info.outputs.title }}
+          body: ${{ steps.version_info.outputs.body }}
           files: release_files/*
           make_latest: true
         env:

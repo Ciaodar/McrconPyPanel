@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCRcon Panel Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="background-effects">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+    </div>
+
+    <nav class="navbar glass">
+        <div class="logo">MCRcon Pro</div>
+        <div class="nav-links">
+            <a href="#features">Özellikler</a>
+            <a href="#download">İndir</a>
+            <a href="https://github.com/" target="_blank" class="github-btn">GitHub</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="gradient-text">Minecraft Sunucunuzu<br>Profesyonelce Yönetin.</h1>
+            <p>Karanlık tema destekli, çapraz platform ve güvenli RCON arayüzü. Komut yazmaktan daha fazlasını yapın.</p>
+            <div class="hero-buttons">
+                <a href="#download" class="btn btn-primary">Hemen İndir</a>
+                <a href="#installation" class="btn btn-secondary">Kurulum Rehberi</a>
+            </div>
+        </div>
+        <div class="hero-image glass-panel">
+            <img src="screenshot.png" alt="MCRcon Panel Pro Ekran Görüntüsü Gelecek" id="app-preview" onerror="this.style.opacity=0">
+        </div>
+    </header>
+
+    <section id="features" class="features-section">
+        <h2>Güçlü <span class="gradient-text">Özellikler</span></h2>
+        <div class="features-grid">
+            <div class="feature-card glass">
+                <div class="icon">🚀</div>
+                <h3>Hızlı & Güvenli</h3>
+                <p>Non-blocking UI ve asenkron ağ iş parçacıkları sayesinde paneli kullanırken donma veya kilitlenme yaşamazsınız.</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="icon">🛠️</div>
+                <h3>Gelişmiş Yönetim</h3>
+                <p>Açılır oyuncu listeleri, 'Cezalandırıcı' sopa verme butonu ve tek tuşla devasa Bedrock Event Alanı inşası.</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="icon">🖥️</div>
+                <h3>Çapraz Platform</h3>
+                <p>Windows, macOS ve Linux ile tam uyumlu. GitHub Actions üzerinden sizin için derlenmiş hazır çalıştırılabilir (exe) dosyalar.</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="icon">🧠</div>
+                <h3>Akıllı Sistem Tespiti</h3>
+                <p>Vanilla, Spigot, Paper veya Purpur altyapılarını otomatik tanır. Desteklenmeyen komutları size göstermez bile.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="download" class="install-section glass-panel">
+        <h2>Kurulum ve Kullanım</h2>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('exe')">Windows (.exe)</button>
+            <button class="tab-btn" onclick="showTab('python')">Kaynak Koddan (Tüm OS)</button>
+        </div>
+        
+        <div id="exe" class="tab-content active">
+            <p>1. GitHub Depomuzun <b>Actions</b> veya <b>Releases</b> sekmesinden <code>MCRconPanel.exe</code> dosyasını indirin.</p>
+            <p>2. İndirdiğiniz dosyaya çift tıklayarak anında çalıştırın. Kurulum gerektirmez, tamamen taşınabilirdir.</p>
+        </div>
+        
+        <div id="python" class="tab-content" style="display: none;">
+            <p>Eğer geliştiriciyseniz, bilgisayarınızda Python yüklüyse şu adımları izleyin:</p>
+            <div class="code-block">
+                <pre><code># Gerekli kütüphaneleri kurun
+pip install customtkinter mcrcon
+
+# Paneli başlatın
+python main.py</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 MCRconPanel Pro. Açık kaynaklı ve gururla geliştirildi.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

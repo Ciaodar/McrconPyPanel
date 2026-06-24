@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İndir - MCRcon Panel Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .download-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px;
+        }
+        .back-link {
+            position: absolute;
+            top: 30px;
+            left: 5%;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s;
+        }
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+        .os-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            width: 100%;
+            margin-top: 50px;
+        }
+        .os-card {
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 350px;
+        }
+        .os-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.2);
+        }
+        .os-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .os-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        .os-card p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+        .dl-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dl-btn:hover {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+        .windows-btn:hover { background: #0078D7; border-color: #0078D7; }
+        .mac-btn:hover { background: #555; border-color: #555; }
+        .linux-btn:hover { background: #E95420; border-color: #E95420; }
+        
+        .source-dl {
+            margin-top: 60px;
+            color: var(--text-secondary);
+        }
+        .source-dl a {
+            color: var(--accent-green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .source-dl a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-effects">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+    </div>
+
+    <a href="../" class="back-link">← Ana Sayfaya Dön</a>
+
+    <div class="download-page">
+        <h1 class="gradient-text">MCRcon Panel Pro'yu İndir</h1>
+        <p style="color: var(--text-secondary); margin-top: 10px;">İşletim sisteminize uygun olan sürümü seçin.</p>
+
+        <div class="os-grid">
+            <!-- Windows -->
+            <div class="os-card glass">
+                <div class="os-icon">🪟</div>
+                <h3>Windows</h3>
+                <p>Windows 10 ve 11 için taşınabilir çalıştırılabilir (.exe) dosya. Kurulum gerektirmez.</p>
+                <a href="https://github.com/Ciaodar/McrconPyPanel/releases/latest/download/MCRconPanel.exe" class="dl-btn windows-btn">Windows için İndir</a>
+            </div>
+
+            <!-- macOS -->
+            <div class="os-card glass">
+                <div class="os-icon">🍎</div>
+                <h3>macOS</h3>
+                <p>Apple Silicon (M1/M2) ve Intel işlemcili Mac'ler için optimize edilmiş paket.</p>
+                <a href="https://github.com/Ciaodar/McrconPyPanel/releases/latest/download/MCRconPanel-macOS.zip" class="dl-btn mac-btn">macOS için İndir</a>
+            </div>
+
+            <!-- Linux -->
+            <div class="os-card glass">
+                <div class="os-icon">🐧</div>
+                <h3>Linux</h3>
+                <p>Ubuntu, Debian ve diğer popüler dağıtımlar için derlenmiş çalıştırılabilir dosya.</p>
+                <a href="https://github.com/Ciaodar/McrconPyPanel/releases/latest/download/MCRconPanel-Linux" class="dl-btn linux-btn">Linux için İndir</a>
+            </div>
+        </div>
+
+        <div class="source-dl glass-panel" style="padding: 20px 40px; margin-top: 40px;">
+            <p>Geliştirici misiniz? <a href="https://github.com/Ciaodar/McrconPyPanel" target="_blank">Kaynak kodunu GitHub'dan indirin</a>.</p>
+        </div>
+    </div>
+</body>
+</html>

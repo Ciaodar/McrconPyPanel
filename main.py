@@ -540,8 +540,11 @@ class MinecraftRconGUI(ctk.CTk):
         threading.Thread(target=self._check_server_version_task, daemon=True).start()
 
     def _check_server_version_task(self):
+        import time
+        time.sleep(1) # RCON bağlantısı tam oturmadan ilk komutun boş dönmesini engellemek için 1 saniye bekle
         try:
-            ver = self.rcon.command("version").lower()
+            raw_ver = self.rcon.command("version")
+            ver = raw_ver.lower()
             if any(k in ver for k in ["paper", "spigot", "bukkit", "purpur"]):
                 self.is_bukkit = True
                 self.after(0, lambda: self.btn_restart.configure(state="normal"))
@@ -549,7 +552,9 @@ class MinecraftRconGUI(ctk.CTk):
             else:
                 self.is_bukkit = False
                 self.after(0, lambda: self.btn_restart.configure(state="disabled"))
-                self.after(0, lambda: self.log_to_console("[*] Vanilla sunucu algılandı. Restart komutu pasif.", "info"))
+                # Gelen yanıtı da yazdıralım ki bir daha olursa ne geldiğini görelim
+                clean_ver = re.sub(r'§[0-9a-fk-or]', '', raw_ver).strip()
+                self.after(0, lambda: self.log_to_console(f"[*] Vanilla sunucu algılandı. (Sunucunun yanıtı: {clean_ver or 'Boş Yanıt'})", "info"))
         except:
             pass
 

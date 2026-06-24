@@ -1,5 +1,5 @@
 {
-  "tag": "v1.1.0",
-  "title": "MCRcon Panel Pro v1.1.0 - The Auto-Updater Update",
-  "description": "Added a new background auto-updater feature! The panel will now silently check for new updates upon launch and notify you with a beautiful in-app dialog if a newer version is available. Also includes minor UX improvements."
+  "tag": "v1.1.1",
+  "title": "MCRcon Panel Pro v1.1.1 - RCON Sync Patch",
+  "description": "Fixed an issue where fast RCON connections would sometimes cause the server software detection to fail and default to Vanilla. Added a short synchronization delay."
 }

@@ -2,6 +2,10 @@ import os
 import sys
 import subprocess
 
+# Windows terminallerinde Türkçe karakter hatası almamak için UTF-8 zorlaması
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
 # Gerekli kütüphanelerin kontrolü
 try:
     import customtkinter

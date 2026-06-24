@@ -19,6 +19,11 @@ def install_hook():
 
 while read local_ref local_sha remote_ref remote_sha
 do
+    # Sadece main branch'e push yapiliyorsa kontrol et
+    if [[ "$remote_ref" != *"refs/heads/main"* && "$remote_ref" != *"refs/heads/master"* ]]; then
+        continue
+    fi
+
     if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then
         # Pushing a new branch. We allow it for now.
         continue

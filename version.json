@@ -1,5 +1,5 @@
 {
-  "tag": "v1.0.0",
-  "title": "MCRcon Panel Pro Initial Release",
-  "description": "Initial stable release of MCRcon Panel Pro with cross-platform support, automatic bedrock event area builder, and advanced server software detection."
+  "tag": "v1.1.0",
+  "title": "MCRcon Panel Pro v1.1.0 - The Auto-Updater Update",
+  "description": "Added a new background auto-updater feature! The panel will now silently check for new updates upon launch and notify you with a beautiful in-app dialog if a newer version is available. Also includes minor UX improvements."
 }

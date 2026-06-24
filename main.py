@@ -5,6 +5,11 @@ import threading
 from mcrcon import MCRcon, MCRconException
 import socket
 import re
+import os
+import sys
+import json
+import urllib.request
+import webbrowser
 
 # Varsayılan temanın ve renk paletinin ayarlanması
 ctk.set_appearance_mode("Dark")
@@ -82,6 +87,9 @@ class MinecraftRconGUI(ctk.CTk):
 
         self._build_sidebar()
         self._build_main_screen()
+        
+        # Açılışta güncellemeleri kontrol et
+        self.check_for_updates()
 
     def _build_sidebar(self):
         # --- Sol Menü (Sidebar) Çerçevesi ---
@@ -602,6 +610,60 @@ class MinecraftRconGUI(ctk.CTk):
         self.log_to_console(f"[-] Komut gönderilirken ağ hatası oluştu: {error_msg}", "error")
         self.log_to_console("[!] Bağlantınız kopmuş olabilir.", "error")
         self.disconnect_from_server()
+
+    # --- GÜNCELLEME KONTROLÜ ---
+    def get_local_version(self):
+        try:
+            # PyInstaller ile derlendiğinde dosyalar sys._MEIPASS içine çıkartılır
+            base_path = sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.dirname(__file__)
+            with open(os.path.join(base_path, 'version.json'), 'r', encoding='utf-8') as f:
+                return json.load(f).get('tag', 'v0.0.0')
+        except Exception:
+            return 'v0.0.0'
+
+    def check_for_updates(self):
+        threading.Thread(target=self._update_task, daemon=True).start()
+
+    def _update_task(self):
+        try:
+            local_v = self.get_local_version()
+            req = urllib.request.Request(
+                "https://api.github.com/repos/Ciaodar/McrconPyPanel/releases/latest",
+                headers={'User-Agent': 'MCRconPanel-Updater'}
+            )
+            with urllib.request.urlopen(req, timeout=5) as response:
+                data = json.loads(response.read().decode())
+                remote_v = data.get("tag_name")
+                # Eğer Github'daki versiyon lokalden farklı ise (ve dev env değilse)
+                if remote_v and local_v != 'v0.0.0' and remote_v != local_v:
+                    # Arayüzün kilitlenmemesi için Tkinter thread'ine gönder
+                    self.after(2000, lambda: self.show_update_dialog(remote_v, data.get("body", "")))
+        except Exception:
+            pass # İnternet yoksa sessizce geç
+
+    def show_update_dialog(self, new_version, release_notes):
+        dialog = ctk.CTkToplevel(self)
+        dialog.title("Güncelleme Mevcut!")
+        dialog.geometry("450x300")
+        dialog.attributes("-topmost", True)
+        dialog.grab_set()
+
+        ctk.CTkLabel(dialog, text=f"🎉 Yeni Sürüm Mevcut! ({new_version})", font=ctk.CTkFont(size=18, weight="bold")).pack(pady=(20, 10))
+        
+        textbox = ctk.CTkTextbox(dialog, width=400, height=120)
+        textbox.pack(pady=10)
+        textbox.insert("0.0", release_notes)
+        textbox.configure(state="disabled")
+
+        btn_frame = ctk.CTkFrame(dialog, fg_color="transparent")
+        btn_frame.pack(pady=10)
+
+        btn_download = ctk.CTkButton(btn_frame, text="Şimdi İndir", fg_color="#28a745", hover_color="#218838",
+                                     command=lambda: [webbrowser.open("https://ciaodar.github.io/McrconPyPanel/download"), dialog.destroy()])
+        btn_download.pack(side="left", padx=10)
+
+        btn_later = ctk.CTkButton(btn_frame, text="Daha Sonra", fg_color="#6c757d", hover_color="#5a6268", command=dialog.destroy)
+        btn_later.pack(side="left", padx=10)
 
 if __name__ == "__main__":
     app = MinecraftRconGUI()

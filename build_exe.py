@@ -33,7 +33,8 @@ build_args = [
     '--noconfirm',
     '--windowed',  # Arka plandaki siyah terminal penceresini gizler (sadece GUI açılır)
     '--onefile',   # Her şeyi tek bir .exe dosyasında toplar
-    f'--add-data={customtkinter_path}{os.pathsep}customtkinter/'
+    f'--add-data={customtkinter_path}{os.pathsep}customtkinter/',
+    f'--add-data=version.json{os.pathsep}.'
 ]
 
 # Kullanıcı "icon.ico" isimli bir dosya indirdiyse bunu exe ikonu olarak ekle

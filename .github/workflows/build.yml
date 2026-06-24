@@ -1,13 +1,12 @@
-name: Cross-Platform Build
+name: Cross-Platform Build & Auto Release
 
 on:
   push:
     branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
 
+# Artifact okuma ve Release (sürüm) oluşturma yetkileri
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -39,12 +38,48 @@ jobs:
     - name: Uygulamayı Derle
       run: |
         python build_exe.py
-        
-    - name: Çıktıyı GitHub'a Yükle (Artifact)
+
+    # İşletim sistemine özel dosya düzenlemeleri (Zip'leme ve İsimlendirme)
+    - name: Dosyaları Hazırla (Mac)
+      if: runner.os == 'macOS'
+      run: |
+        cd dist
+        zip -r MCRconPanel-macOS.zip MCRconPanel.app
+
+    - name: Dosyaları Hazırla (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        cd dist
+        mv MCRconPanel MCRconPanel-Linux
+
+    - name: Çıktıyı GitHub'a Geçici Olarak Yükle
       uses: actions/upload-artifact@v4
       with:
-        # Artifact adını işletim sistemine göre dinamik olarak belirleriz
         name: MCRconPanel-${{ runner.os }}
-        # Hem Windows (.exe) hem de Mac/Linux (uzantısız) desteklemesi için tüm dist klasörünü alıyoruz
-        path: dist/*
-        if-no-files-found: error
+        path: |
+          dist/MCRconPanel.exe
+          dist/MCRconPanel-macOS.zip
+          dist/MCRconPanel-Linux
+        if-no-files-found: ignore
+
+  release:
+    name: Otomatik Release Oluştur
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tüm İşletim Sistemi Çıktılarını İndir
+        uses: actions/download-artifact@v4
+        with:
+          path: release_files
+          merge-multiple: true
+
+      - name: GitHub Release (Sürüm) Güncelle
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "latest"
+          name: "En Güncel Sürüm (Otomatik)"
+          body: "Bu sürüm kodunuzda yaptığınız son değişiklikler sonucunda otomatik olarak derlenmiştir."
+          files: release_files/*
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

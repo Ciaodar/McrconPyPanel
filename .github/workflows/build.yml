@@ -1,0 +1,85 @@
+name: Cross-Platform Build & Auto Release
+
+on:
+  push:
+    branches: [ "main", "master" ]
+
+# Artifact okuma ve Release (sürüm) oluşturma yetkileri
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Depoyu Klonla
+      uses: actions/checkout@v4
+
+    - name: Python Ortamını Kur
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Linux için Ek Bağımlılıkları Kur
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-tk
+
+    - name: Kütüphaneleri Yükle
+      run: |
+        python -m pip install --upgrade pip
+        pip install customtkinter mcrcon pyinstaller pillow
+
+    - name: Uygulamayı Derle
+      run: |
+        python build_exe.py
+
+    # İşletim sistemine özel dosya düzenlemeleri (Zip'leme ve İsimlendirme)
+    - name: Dosyaları Hazırla (Mac)
+      if: runner.os == 'macOS'
+      run: |
+        cd dist
+        zip -r MCRconPanel-macOS.zip MCRconPanel.app
+
+    - name: Dosyaları Hazırla (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        cd dist
+        mv MCRconPanel MCRconPanel-Linux
+
+    - name: Çıktıyı GitHub'a Geçici Olarak Yükle
+      uses: actions/upload-artifact@v4
+      with:
+        name: MCRconPanel-${{ runner.os }}
+        path: |
+          dist/MCRconPanel.exe
+          dist/MCRconPanel-macOS.zip
+          dist/MCRconPanel-Linux
+        if-no-files-found: ignore
+
+  release:
+    name: Otomatik Release Oluştur
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tüm İşletim Sistemi Çıktılarını İndir
+        uses: actions/download-artifact@v4
+        with:
+          path: release_files
+          merge-multiple: true
+
+      - name: GitHub Release (Sürüm) Güncelle
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "latest"
+          name: "En Güncel Sürüm (Otomatik)"
+          body: "Bu sürüm kodunuzda yaptığınız son değişiklikler sonucunda otomatik olarak derlenmiştir."
+          files: release_files/*
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
